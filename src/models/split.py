@@ -2,37 +2,26 @@ import os
 import shutil
 import random
 
-def split_data(source_dir, train_dir, val_dir, split_ratio=0.8):
-    classes = [d for d in os.listdir(source_dir) if os.path.isdir(os.path.join(source_dir, d))]
+SRC_DIR = 'dataset'
+TRAIN_DIR = 'data/train'
+TEST_DIR = 'data/test'
+SPLIT_RATIO = 0.8
 
-    for cls in classes:
-        cls_source = os.path.join(source_dir, cls)
-        cls_train = os.path.join(train_dir, cls)
-        cls_val = os.path.join(val_dir, cls)
+for label in os.listdir(SRC_DIR):
+    files = os.listdir(os.path.join(SRC_DIR, label))
+    random.shuffle(files)
 
-        os.makedirs(cls_train, exist_ok=True)
-        os.makedirs(cls_val, exist_ok=True)
+    train_len = int(len(files) * SPLIT_RATIO)
+    train_files = files[:train_len]
+    test_files = files[train_len:]
 
-        images = os.listdir(cls_source)
-        random.shuffle(images)
+    os.makedirs(os.path.join(TRAIN_DIR, label), exist_ok=True)
+    os.makedirs(os.path.join(TEST_DIR, label), exist_ok=True)
 
-        train_count = int(len(images) * split_ratio)
+    for f in train_files:
+        shutil.copy(os.path.join(SRC_DIR, label, f), os.path.join(TRAIN_DIR, label, f))
 
-        train_images = images[:train_count]
-        val_images = images[train_count:]
+    for f in test_files:
+        shutil.copy(os.path.join(SRC_DIR, label, f), os.path.join(TEST_DIR, label, f))
 
-        for img in train_images:
-            shutil.copy(os.path.join(cls_source, img), os.path.join(cls_train, img))
-
-        for img in val_images:
-            shutil.copy(os.path.join(cls_source, img), os.path.join(cls_val, img))
-
-    print("✅ Dataset split complete!")
-
-# Usage example:
-source_folder = "data/asl_alphabet_train"
-train_folder = "data/asl_alphabet_train_split/train"
-val_folder = "data/asl_alphabet_train_split/val"
-
-split_data(source_folder, train_folder, val_folder)
-
+print("[✅] Dataset split complete!")
