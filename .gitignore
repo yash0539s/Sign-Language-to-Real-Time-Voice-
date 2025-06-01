@@ -1,4 +1,7 @@
 # .gitignore
-data/
-venv/
 
+venv/
+da/
+dataset/
+
+asl_alphabet_clean_split/
