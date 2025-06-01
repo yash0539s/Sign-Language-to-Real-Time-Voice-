@@ -1,0 +1,15 @@
+dataset:
+  train_path: "data/train"
+  test_path: "data/test"  # Used as validation set
+  image_size: [64, 64]
+  batch_size: 8
+
+model:
+  input_shape: [64, 64, 3]  # MUST match image_size + [3]
+  num_classes: 26          # Update this to the actual number of folders/classes
+  epochs: 15                # Increased for better training
+  name: "asl_cnn_model_v2"  # Versioned model name
+
+mlflow:
+  tracking_uri: "http://127.0.0.1:5000"
+  experiment_name: "ASL-Image-Classification-v2"

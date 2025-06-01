@@ -1,0 +1,9 @@
+# requirements.txt
+fastapi
+uvicorn
+tensorflow
+mlflow
+pyttsx3
+python-multipart
+pillow
+PyYAML

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign Language to Voice</title>
+</head>
+<body>
+    <h1>Sign Language Real-Time Prediction</h1>
+    <video id="video" width="320" height="240" autoplay></video>
+    <button onclick="capture()">Capture</button>
+    <p>Prediction: <span id="prediction"></span></p>
+    <audio id="audio" controls></audio>
+
+    <script>
+        const video = document.getElementById('video');
+
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => { video.srcObject = stream })
+            .catch(err => { console.error(err); });
+
+        function capture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+
+            canvas.toBlob(async (blob) => {
+                let formData = new FormData();
+                formData.append('file', blob, 'capture.jpg');
+
+                const response = await fetch('/predict/', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                document.getElementById('prediction').innerText = data.prediction;
+                if (data.audio) {
+                    const audio = document.getElementById('audio');
+                    audio.src = "data:audio/mp3;base64," + data.audio;
+                    audio.play();
+                }
+            }, 'image/jpeg');
+        }
+    </script>
+</body>
+</html>
