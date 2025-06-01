@@ -23,7 +23,7 @@ class SignLanguageModel:
 
 
 def main():
-    model_path = 'models/asl_cnn_model_v2/saved_model2.keras'  # Update path accordingly
+    model_path = 'path/to/your/model'  # Update path accordingly
     model = SignLanguageModel(model_path)
 
     cap = cv2.VideoCapture(0)
